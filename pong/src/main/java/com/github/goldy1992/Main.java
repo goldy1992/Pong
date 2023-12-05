@@ -1,0 +1,290 @@
+package com.github.goldy1992;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.FPSAnimator;
+//import static com.jogamp.media.opengl.GL.*;  // GL constants
+import static com.jogamp.opengl.GL2.*; // GL2 constants
+import com.jogamp.opengl.util.gl2.GLUT;
+import java.nio.FloatBuffer;
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Mike
+ */
+    
+ 
+/**
+ * JOGL 2.0 Program Template (GLCanvas)
+ * This is a "Component" which can be added into a top-level "Container".
+ * It also handles the OpenGL events to render graphics.
+ */
+@SuppressWarnings("serial")
+public class Main extends GLJPanel implements GLEventListener, KeyListener
+{
+   // Define constants for the top-level container
+   private static String TITLE = "JOGL 2.0 Setup (GLCanvas)";  // window's title
+   private static final int CANVAS_WIDTH = 640;  // width of the drawable
+   private static final int CANVAS_HEIGHT = 480; // height of the drawable
+   private static final int FPS = 60; // animator's target frames per second
+ 
+   /** The entry main() method to setup the top-level container and animator */
+   public static void main(String[] args) {
+      // Run the GUI codes in the event-dispatching thread for thread safety
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            // Create the OpenGL rendering canvas
+            Main panel = new Main();
+            panel.addKeyListener(panel);
+            panel.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+ 
+            // Create a animator that drives canvas' display() at the specified FPS.
+            final FPSAnimator animator = new FPSAnimator(panel, FPS, true);
+ 
+            // Create the top-level container
+            final JFrame frame = new JFrame(); // Swing's JFrame or AWT's Frame
+            frame.getContentPane().add(panel);
+            frame.addWindowListener(new WindowAdapter() {
+               @Override
+               public void windowClosing(WindowEvent e) {
+                  // Use a dedicate thread to run the stop() to ensure that the
+                  // animator stops before program exits.
+                  new Thread() {
+                     @Override
+                     public void run() {
+                        if (animator.isStarted()) animator.stop();
+                        System.exit(0);
+                     }
+                  }.start();
+               }
+            });
+            frame.setTitle(TITLE);
+            frame.pack();
+            frame.setVisible(true);
+            //animator.start(); // start the animation loop
+         }
+      });
+   }
+ 
+   // Setup OpenGL Graphics Renderer
+ 
+   private GLU glu;  // for the GL Utility
+ 
+   /** Constructor to setup the GUI for this Component */
+   
+   private float angle = 0;
+   public boolean rotateLeft = false;
+   public boolean rotateRight = false;   
+   
+   public Main() {
+      this.addGLEventListener(this);
+   }
+ 
+   // ------ Implement methods declared in GLEventListener ------
+ 
+   /**
+    * Called back immediately after the OpenGL context is initialized. Can be used
+    * to perform one-time initialization. Run only once.
+     * @param drawable
+    */
+   @Override
+   public void init(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();      // get the OpenGL graphics context
+        glu = new GLU();                         // get GL Utilities
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
+        gl.glEnable(GL_COLOR_MATERIAL);
+        gl.glEnable(GL_LIGHTING); //Enable lighting
+        gl.glEnable(GL_LIGHT0); //Enable light #0
+        gl.glEnable(GL_LIGHT1); //Enable light #1
+        gl.glEnable(GL_NORMALIZE); //Automatically normalize normals      
+        gl.glClearDepth(1.0f);      // set clear depth value to farthest
+        gl.glEnable(GL2.GL_DEPTH_TEST); // enables depth testing
+        gl.glDepthFunc(GL2.GL_LEQUAL);  // the type of depth test to do
+        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best perspective correction
+        gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+      
+     // drawable.
+              
+      
+ 
+      // ----- Your OpenGL initialization code here -----
+   }
+ 
+   /**
+    * Call-back handler for window re-size event. Also called when the drawable is
+    * first set to visible.
+    */
+   @Override
+   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+      GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+ 
+      if (height == 0) height = 1;   // prevent divide by zero
+      float aspect = (float)width / height;
+ 
+      // Set the view port (display area) to cover the entire window
+      gl.glViewport(0, 0, width, height);
+ 
+      // Setup perspective projection, with aspect ratio matches viewport
+      gl.glMatrixMode(GL2.GL_PROJECTION);  // choose projection matrix
+      gl.glLoadIdentity();             // reset projection matrix
+      glu.gluPerspective(45.0, aspect, 1, 1000.0); // fovy, aspect, zNear, zFar
+ 
+      // Enable the model-view transform
+      gl.glMatrixMode(GL2.GL_MODELVIEW);
+      gl.glLoadIdentity(); // reset
+   }
+ 
+   /**
+    * Called back by the animator to perform rendering.
+    */
+   @Override
+   public void display(GLAutoDrawable drawable) {
+           //  System.out.println("called display");
+        if (rotateLeft)
+        {
+            if (angle <= 0)
+                angle = 360;
+            else angle -= 1;
+        }
+        if (rotateRight)
+        {
+            if (angle >= 360)
+                angle = 0;
+            else angle += 1;
+        }
+        
+      GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+
+ 
+      // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
+   //   gl.glTranslatef(0.0f, 0.0f, -6.0f); // translate into the screen
+ /*     gl.glBegin(GL2.GL_TRIANGLES); // draw using triangles
+      // x: Math.cos(angle) * (point.x - center.x) - Math.sin(angle) * (point.y-center.y) + center.x;
+      // y: Math.sin(angle) * (point.x - center.x) + Math.cos(angle) * (point.y - center.y) + center.y;
+         gl.glVertex3f((float)(Math.sin(angle)) * (-1.0f) , ((float)(Math.cos(angle)) * (1.0f)), 0.0f);
+         gl.glVertex3f(((float)(Math.cos(angle)) * (-1.0f)) 
+                        - ((float)(Math.sin(angle)) * (-1.0f)),            
+                    ((float)(Math.sin(angle)) * -1.0f) + ((float)(Math.cos(angle)) * -1.0f), 0.0f);
+         gl.glVertex3f(((float)(Math.cos(angle)) * (1.0f)) 
+                        - ((float)(Math.sin(angle)) * (-1.0f)), 
+                 
+                 ((float)(Math.sin(angle)) * (1.0f)) + ((float)(Math.cos(angle)) * (-1.0f)), 0.0f);
+      gl.glEnd();*/
+      
+    gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 
+    gl.glMatrixMode(GL_MODELVIEW);
+    gl.glLoadIdentity();
+ 
+    gl.glTranslatef(0.0f, 0.0f, -8.0f);
+ 
+    //Add ambient light
+    float ambientColorf[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+    FloatBuffer ambientColor = FloatBuffer.wrap(ambientColorf);    
+    gl.glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+ 
+    //Add positioned light
+    float lightColor0f[] = {0.5f, 0.5f, 0.5f, 1.0f}; //Color (0.5, 0.5, 0.5)
+    FloatBuffer lightColor0 = FloatBuffer.wrap(lightColor0f);
+    float lightPos0f[] = {4.0f, 0.0f, 8.0f, 1.0f}; //Positioned at (4, 0, 8)
+    FloatBuffer lightPos0 = FloatBuffer.wrap(lightPos0f);
+    gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+    gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+ 
+    //Add directed light
+    float lightColor1f[] = {0.5f, 0.2f, 0.2f, 1.0f}; //Color (0.5, 0.2, 0.2)
+    FloatBuffer lightColor1 = FloatBuffer.wrap(lightColor1f);
+    //Coming from the direction (-1, 0.5, 0.5)
+    float lightPos1f[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+    FloatBuffer lightPos1 = FloatBuffer.wrap(lightPos1f);
+    gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+    gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+ 
+  
+      
+          gl.glRotatef(angle, 0.0f, 1.0f, 1.0f);
+    //Set the colour here
+    gl.glColor3f(1.0f, 0.0f, 0.0f);
+/*    gl.glBegin(GL_QUADS);
+ 
+    //Front
+    gl.glNormal3f(0.0f, 0.0f, 1.0f);
+    gl.glVertex3f(-1.5f, -1.0f, 1.5f);
+    gl.glVertex3f(1.5f, -1.0f, 1.5f);
+    gl.glVertex3f(1.5f, 1.0f, 1.5f);
+    gl.glVertex3f(-1.5f, 1.0f, 1.5f);
+ 
+    //Right
+    gl.glNormal3f(1.0f, 0.0f, 0.0f);
+    gl.glVertex3f(1.5f, -1.0f, -1.5f);
+    gl.glVertex3f(1.5f, 1.0f, -1.5f);
+    gl.glVertex3f(1.5f, 1.0f, 1.5f);
+    gl.glVertex3f(1.5f, -1.0f, 1.5f);
+ 
+    //Back
+    gl.glNormal3f(0.0f, 0.0f, -1.0f);
+    gl.glVertex3f(-1.5f, -1.0f, -1.5f);
+    gl.glVertex3f(-1.5f, 1.0f, -1.5f);
+    gl.glVertex3f(1.5f, 1.0f, -1.5f);
+    gl.glVertex3f(1.5f, -1.0f, -1.5f);
+ 
+    //Left
+    gl.glNormal3f(-1.0f, 0.0f, 0.0f);
+    gl.glVertex3f(-1.5f, -1.0f, -1.5f);
+    gl.glVertex3f(-1.5f, -1.0f, 1.5f);
+    gl.glVertex3f(-1.5f, 1.0f, 1.5f);
+    gl.glVertex3f(-1.5f, 1.0f, -1.5f);
+
+    gl.glEnd();*/
+    GLUT glut = new GLUT();
+    glut.glutSolidCube(5);      
+      drawable.swapBuffers();
+   }
+ 
+   /**
+    * Called back before the OpenGL context is destroyed. Release resource such as buffers.
+    */
+   @Override
+   public void dispose(GLAutoDrawable drawable) { }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            rotateLeft = true;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT)            
+            rotateRight = true;
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT)
+            rotateLeft = false;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT)            
+            rotateRight = false;        
+   }
+
+    
+    
+    
+    
+}

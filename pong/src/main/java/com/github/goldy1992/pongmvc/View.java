@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;

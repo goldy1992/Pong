@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
@@ -20,8 +20,8 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.nio.FloatBuffer;
-import static pongmvc.GameDimensions.*;
-import static pongmvc.Paddle.*;
+import static com.github.goldy1992.pongmvc.GameDimensions.*;
+import static com.github.goldy1992.pongmvc.Paddle.*;
 
 public class GameArea1 extends GLJPanel implements GLEventListener
 {

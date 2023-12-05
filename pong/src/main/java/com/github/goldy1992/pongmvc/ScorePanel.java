@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import java.awt.BorderLayout;
 import java.awt.Font;

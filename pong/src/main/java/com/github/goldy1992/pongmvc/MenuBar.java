@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -13,7 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-import pongmvc.Controller.Mode;
+import com.github.goldy1992.pongmvc.Controller.Mode;
 
 public class MenuBar extends JMenuBar implements ActionListener
 {

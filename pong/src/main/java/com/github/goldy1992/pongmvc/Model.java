@@ -1,8 +1,8 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import pongmvc.Controller.Mode;
+import com.github.goldy1992.pongmvc.Controller.Mode;
 
 /**
  * 

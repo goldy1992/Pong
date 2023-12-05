@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 public class Point<X, Y>
 {

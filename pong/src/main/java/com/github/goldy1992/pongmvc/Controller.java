@@ -1,4 +1,4 @@
-package pongmvc;
+package com.github.goldy1992.pongmvc;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
