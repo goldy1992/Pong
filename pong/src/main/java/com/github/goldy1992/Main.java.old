@@ -75,7 +75,7 @@ public class Main extends GLJPanel implements GLEventListener, KeyListener
             frame.setTitle(TITLE);
             frame.pack();
             frame.setVisible(true);
-            //animator.start(); // start the animation loop
+            animator.start(); // start the animation loop
          }
       });
    }
@@ -91,7 +91,7 @@ public class Main extends GLJPanel implements GLEventListener, KeyListener
    public boolean rotateRight = false;   
    
    public Main() {
-      this.addGLEventListener(this);
+//      this.addGLEventListener(this);
    }
  
    // ------ Implement methods declared in GLEventListener ------

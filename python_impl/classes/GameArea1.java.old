@@ -45,8 +45,8 @@ public class GameArea1 extends GLJPanel implements GLEventListener
    public GameArea1()
    {
 	  setDoubleBuffered(true);
-     // if (Controller.initialBackgroundColour != null)
-    	//  backgroundColour = new Color(Controller.initialBackgroundColour);
+      if (Controller.initialBackgroundColour != null)
+    	  backgroundColour = new Color(Controller.initialBackgroundColour);
    }
    
 
