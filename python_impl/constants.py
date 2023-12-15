@@ -1,6 +1,11 @@
+from typing import Tuple, Union
+
+
 transparent = (0,0,0,0)
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-PADDLE_WIDTH = 60
-PADDLE_HEIGHT = 180
-PADDLE_START_X_POS = (WINDOW_HEIGHT - PADDLE_HEIGHT) / 2
+
+RGB = Tuple[int, int, int]
+RGBA = Tuple[int, int, int, int]
+Position = Tuple[float, float]
+Color = Union[RGB, RGBA]
