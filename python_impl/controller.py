@@ -55,8 +55,11 @@ def update():
       if event.key == pygame.K_UP:
         model.player1.moving_up = False
       if event.key == pygame.K_SPACE:
+        print(f'space pressed')
         if not model.isPaused:
+          print(f'space pressed model not paused')
           if model.waitingToServe:
+            print(f'space pressed model not paused waiting to serve')
             model.waitingToServe = False
    
     mouse_pressed = get_pressed(3)

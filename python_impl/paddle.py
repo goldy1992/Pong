@@ -1,7 +1,5 @@
-
 import pygame
 from constants import WINDOW_HEIGHT, Color
-
 
 PADDLE_WIDTH = 60
 PADDLE_HEIGHT = 180
@@ -15,10 +13,20 @@ class Paddle:
     moving_up = False
     moving_down = False
     color: Color = (255, 255, 255)
-    rect = pygame.Rect(x_pos, y_pos, width, height)
+    rect : pygame.Rect
 
     def __init__(self, x_pos: int) -> None:
         self.x_pos = x_pos
+        self.__set_rect()
+  
+  
+    def __set_rect(self):
+        self.rect = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height)
+
 
     def move(self, new_pos: int):
         self.y_pos = new_pos
+        self.__set_rect()
+    def move_delta(self, amount: int):
+        self.y_pos += amount
+        self.__set_rect()

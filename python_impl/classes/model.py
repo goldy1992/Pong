@@ -53,80 +53,22 @@ class Model():
 
         # ball = new Ball();
 
-  def __check_for_intersection(self):
+  def __check_for_player_hit(self) -> bool:
     ball = self.ball
     p1 = self.player1
     p2 = self.player2
 
-
-    if pygame.Rect.colliderect(ball.rect, p1.rect) or pygame.Rect.colliderect(ball.rect, p2.rect):
+    #print(f'ball: {ball.rect}, p1: {p1.rect}, p2: {p2.rect}')
+    if pygame.Rect.colliderect(ball.rect, p1.rect):
+      print(f'hit p1')
       ball.dx = - ball.dx
+      return True
+    elif pygame.Rect.colliderect(ball.rect, p2.rect):
+      print(f'hit p2')
+      ball.dx = - ball.dx
+      return True
+    return False
 
-
-  def checkForIntersection(self) -> BallState:
-    return BallState.BALL_DIDNT_TOUCH_PADDLE
-#        if ((ballTouchTopP1() && ball.dy > 0) || 
-#                (ballTouchTopP2() && ball.dy > 0) ||
-#                (ballTouchBottomP1() && ball.dy > 0) || 
-#                (ballTouchBottomP2() && ball.dy > 0))
-#                ball.dy = 1.5f  * ball.dy;
-
-#        if ( (ballTouchTopP1() && ballTouchSideP1() && ball.dy > 0) ||
-#                      (ballTouchBottomP1() && ballTouchSideP1() && ball.dy < 0))
-#                return BALL_TOUCHED_PADDLE_CORNER;
-
-#        else if ((ballTouchTopP1() && ball.dy > 0) || 
-#                           (ballTouchBottomP1() && ball.dy < 0))
-#       return BALL_TOUCHED_PADDLE_TOP;
-
-#        else if (ballTouchSideP1())
-#           return BALL_TOUCHED_PADDLE_SIDE;
-
-
-#        if ( (ballTouchTopP2() && ballTouchSideP2() && ball.dy > 0) ||
-#                      (ballTouchBottomP2() && ballTouchSideP2() && ball.dy < 0))
-#                return BALL_TOUCHED_PADDLE_CORNER;
-
-#        else if ((ballTouchTopP2() && ball.dy > 0) || 
-#                          (ballTouchBottomP2() && ball.dy < 0))
-#       return BALL_TOUCHED_PADDLE_TOP;
-
-#        else if (ballTouchSideP2())
-#           return BALL_TOUCHED_PADDLE_SIDE;	
-
-#        return BALL_DIDNT_TOUCH_PADDLE;
-#     }
-
-
-#     private void checkForPaddleMovements()
-#     {
-#        if (Controller.gameMode.equals(Mode.MULTI))
-#        {
-#           if(player2.isMovingUp())
-#                   player2.move(player2.topLeftPoint.getY()+7);
-#           else if(player2.isMovingDown())
-#                   player2.move(player2.topLeftPoint.getY()-7);
-
-#           if(player1.isMovingUp())
-#                   player1.move(player1.topLeftPoint.getY()+7);
-#           else if(player1.isMovingDown())
-#                   player1.move(player1.topLeftPoint.getY()-7);
-#        } // if
-#        else if (Controller.gameMode.equals(Mode.SINGLE))
-#        {
-#                if(player1.isMovingUp())
-#                   player1.move(player1.topLeftPoint.getY()+7);
-#                else if(player1.isMovingDown())
-#                       player1.move(player1.topLeftPoint.getY()-7);
-#           AI.moveAI_P2(ball, player2);
-#        } // else if
-#        else
-#        {
-#                AI.moveAI_P2(ball, player2);
-#                AI.moveAI_P1(ball, player1);
-#        } // else
-
-   # } // checkForPaddleMovements
 
   def update(self, deltaTimeMs):
     if self.setNewGame:
@@ -140,98 +82,27 @@ class Model():
       self.__move_ball(deltaTimeMs)
   
 
-#     // collision check accessory methods
-
-#     public boolean ballTouchTopP1()
-#     {
-#        return ball.ballImage.intersects(player1.topLeftPoint.getX(), 
-#             player1.topLeftPoint.getY(), 
-#             Paddle.PADDLE_WIDTH, 1);
-#     } // ballTouchTopP1
-    
-#     public boolean ballTouchSideP1()
-#     {   
-#         boolean x = ball.ballImage.intersects(player1.topRightPoint.getX()-1, 
-#             player1.topRightPoint.getY(), 
-#         1, Paddle.PADDLE_HEIGHT);
-#         if (x)
-#         System.out.print("touched p1");
-#         return x;
-#     } // ballTouch Side P1
-#     public boolean ballTouchBottomP1()
-#     {
-#         return ball.ballImage.intersects(player1.bottomLeftPoint.getX(), 
-#             player1.bottomLeftPoint.getY(), 
-#             Paddle.PADDLE_WIDTH, 1);	
-#     } // ballTouchBottomP1
-#     public boolean ballTouchTopP2()
-#     {
-#         return ball.ballImage.intersects(player2.topLeftPoint.getX(), 
-#                player2.topLeftPoint.getY(), 
-#                Paddle.PADDLE_WIDTH, 1);
-#     } // ballTouchTopP2
-#     public boolean ballTouchSideP2()
-#     {
-#         boolean x = ball.ballImage.intersects(player2.topLeftPoint.getX(), 
-#                        player2.topLeftPoint.getY(), 
-#                        1, Paddle.PADDLE_HEIGHT);
-#         if (x)
-#             System.out.print("touched p2");
-#         return x;	
-#     }// ballTouchSideP2
-#     public boolean ballTouchBottomP2()
-#     {
-#             return ball.ballImage.intersects(player2.bottomLeftPoint.getX(), 
-#                    player2.bottomLeftPoint.getY(), 
-#                    Paddle.PADDLE_WIDTH, 1);
-#     } // ballTouchBottomP2
-
   def __move_paddles(self, deltaTimeMs: float):
     p1 = self.player1
     if p1.moving_up:
-      p1.y_pos -= 100 * (deltaTimeMs / 500)
+      p1.move_delta(-100 * (deltaTimeMs / 500))
     if self.player1.moving_down:
-      p1.y_pos += 100 * (deltaTimeMs / 500)
+      p1.move_delta(100 * (deltaTimeMs / 500))
 
   def __move_ball(self, deltaTimeMs: float):
-    self.__check_for_intersection()
-    changeNo: BallState = self.checkForIntersection()
-
-    if changeNo != BallState.BALL_DIDNT_TOUCH_PADDLE:
+    hit_player = self.__check_for_player_hit()
+    # TODO: finish editing
+    if not hit_player:
       self.ball.isTouchingPaddle = True
-      self.ball.moveToInitialPosition()
+      self.ball.move_to_initial_position()
       self.waitingToServe = True
 
     if not self.waitingToServe:
       if not self.__check_out_of_bounds():
-        new_pos = self.__calculate_new_ball_position(changeNo)
+        print(f'not out of bounds')
+        new_pos = self.__calculate_new_ball_position()
         self.ball.move(new_pos=new_pos)
 
-
-  def __is_ball_touching_player(self):
-    p1 = self.player1
-    p1_surface = pygame.Surface((p1.width, p1.height))
-    p1_rect = pygame.Rect((0, 0), p1.width, p1.height)
-    pygame.draw.rect(p1_surface, "green", p1_rect)
-    p1_surface.blit()
-    p1_mask = pygame.mask.from_surface(p1_surface)
-
-    p2 = self.player1
-    p2_surface = pygame.Surface((p2.width, p2.height))
-    p2_rect : pygame.Rect((0, 0), p2.width, p2.height)
-    pygame.draw.rect(p2_surface, "green", p2_rect)
-    p2_surface.blit()
-    p2_mask = pygame.mask.from_surface(p2_surface)
-
-    b = self.ball
-    b_center = (b.radius, b.radius)
-    b_surface = pygame.Surface((b.radius* 2, b.radius*2))
-    pygame.draw.circle(b_surface, "green", b_center, b.radius)
-    b_surface.blit()
-    b_mask = pygame.mask.from_surface(b_surface)
-    return b_mask.overlap(p1_mask) or b_mask.overlap(p2_mask)
-
-  
   def __check_out_of_bounds(self) -> bool:
     ball = self.ball
     if not pygame.Rect.colliderect(ball.rect, WORLD_RECT):
@@ -243,7 +114,7 @@ class Model():
     return False
   
 
-  def __calculate_new_ball_position(self, state: BallState) -> Position:
+  def __calculate_new_ball_position(self) -> Position:
          # if statement added here because if dx and dy are originally set when 
          # the game is paused the AI knows where the ball will go before the game 
          # commences and will therefore move to that position
