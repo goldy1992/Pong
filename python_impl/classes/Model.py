@@ -1,18 +1,10 @@
-# package com.github.goldy1992.pongmvc;
-
-# import java.awt.Color;
-# import java.awt.event.KeyEvent;
-# import com.github.goldy1992.pongmvc.Controller.Mode;
-
-# /**
-#  * 
-#  * @author goldy
-#  *
-#  */
-
 from enum import Enum
+
+import pygame
 from classes.ball import Ball
-from paddle import Paddle
+from classes.util import random_direction
+from constants import WINDOW_HEIGHT, WINDOW_WIDTH, Position
+from paddle import PADDLE_WIDTH, Paddle
 
 class BallState(Enum):
   BALL_TOUCHED_PADDLE_CORNER = 0
@@ -24,7 +16,7 @@ class Model():
 
     # definitions representing where about's the ball hit the paddle 
   player1 : Paddle = Paddle(20)
-  player2 : Paddle = Paddle(580)
+  player2 : Paddle = Paddle(WINDOW_WIDTH - 20 - PADDLE_WIDTH)
   
   ball : Ball = Ball(radius=10.0)
   isPaused : bool = False
@@ -128,34 +120,15 @@ class Model():
    # } // checkForPaddleMovements
 
   def update(self, deltaTimeMs):
-
-    p1 = self.player1
-    if p1.moving_up:
-        p1.y_pos -= 100 * (deltaTimeMs / 500)
-    if self.player1.moving_down:
-        p1.y_pos += 100 * (deltaTimeMs / 500)
-
     if self.setNewGame:
-      #ball.moveToInitialPosition();
-      self.player1.move(Paddle.PADDLE_YPOS_FOR_GAME_START);
-      self.player2.move(Paddle.PADDLE_YPOS_FOR_GAME_START);
-      setNewGame = False
+      self.ball.move_to_initial_position()
+      self.setNewGame = False
 
-        #// executes usually when a new game has not been requested
+    # executes when a new game has not been requested
     elif not self.isPaused:
       #pass
-      #checkForPaddleMovements();
-      changeNo: BallState = self.checkForIntersection()
-
-      if changeNo != BallState.BALL_DIDNT_TOUCH_PADDLE:
-        self.ball.isTouchingPaddle = True
-
-        if self.ball.isOutOfBounds():
-          self.ball.moveToInitialPosition()
-          self.waitingToServe = True
-
-          if not self.waitingToServe:
-            self.ball.move(changeNo)
+      self.__move_paddles(deltaTimeMs)
+      self.__move_ball(deltaTimeMs)
   
 
 #     // collision check accessory methods
@@ -204,4 +177,117 @@ class Model():
 #                    Paddle.PADDLE_WIDTH, 1);
 #     } // ballTouchBottomP2
 
-# } // class
+  def __move_paddles(self, deltaTimeMs: float):
+    p1 = self.player1
+    if p1.moving_up:
+      p1.y_pos -= 100 * (deltaTimeMs / 500)
+    if self.player1.moving_down:
+      p1.y_pos += 100 * (deltaTimeMs / 500)
+
+  def __move_ball(self, deltaTimeMs: float):
+    changeNo: BallState = self.checkForIntersection()
+
+    if changeNo != BallState.BALL_DIDNT_TOUCH_PADDLE:
+      self.ball.isTouchingPaddle = True
+
+    if self.ball.is_out_of_bounds():
+      self.ball.moveToInitialPosition()
+      self.waitingToServe = True
+
+    if not self.waitingToServe:
+      new_pos = self.__calculate_new_ball_position(changeNo)
+      self.ball.move(new_pos=new_pos)
+
+
+  def __is_ball_touching_player(self):
+    p1 = self.player1
+    p1_surface = pygame.Surface((p1.width, p1.height))
+    p1_rect = pygame.Rect((0, 0), p1.width, p1.height)
+    pygame.draw.rect(p1_surface, "green", p1_rect)
+    p1_surface.blit()
+    p1_mask = pygame.mask.from_surface(p1_surface)
+
+    p2 = self.player1
+    p2_surface = pygame.Surface((p2.width, p2.height))
+    p2_rect : pygame.Rect((0, 0), p2.width, p2.height)
+    pygame.draw.rect(p2_surface, "green", p2_rect)
+    p2_surface.blit()
+    p2_mask = pygame.mask.from_surface(p2_surface)
+
+    b = self.ball
+    b_center = (b.radius, b.radius)
+    b_surface = pygame.Surface((b.radius* 2, b.radius*2))
+    pygame.draw.circle(b_surface, "green", b_center, b.radius)
+    b_surface.blit()
+    b_mask = pygame.mask.from_surface(b_surface)
+    return b_mask.overlap(p1_mask) or b_mask.overlap(p2_mask)
+
+  def __calculate_new_ball_position(self, state: BallState) -> Position:
+         # if statement added here because if dx and dy are originally set when 
+         # the game is paused the AI knows where the ball will go before the game 
+         # commences and will therefore move to that position
+    ball = self.ball
+    if (ball.dx == 0) or (ball.dy == 0):
+      dx = random_direction()
+      dy = random_direction()
+      print(f"dx:  + {dx} + dy: {dy}")
+      ball.dx = dx
+      ball.dy = dy
+	  
+    # if the ball touches the the top wall then change y direction.
+    ball_top = ball.position[1] - ball.radius
+    ball_bottom = ball.position[1] + ball.radius
+    if (ball_top < 0) or (ball_bottom > WINDOW_HEIGHT):
+      ball.dy = -ball.dy
+
+    # if __is_ball_touching_player():
+    #   return False
+   
+   
+    return (ball.position[0], ball.position[1])
+
+
+#       if (isTouchingPaddle)
+#       {
+#     	 if(!hasChangedDirection)
+#          {
+#     		 // uses changeNo to decide how to react to the intersections
+#              switch (changeNo)
+#              {
+#                 case 0: dx = -1.1f * dx;
+#                          dy = -1.1f * dy;
+#                          break;
+#                 case 1: dy = -1.05f * dy;
+#                          break;
+#                 case 2: dx = -1.05f * dx;
+#                 default : break;
+#              } // switch
+#     		 hasChangedDirection = true;
+#          } // inner if
+#          isTouchingPaddle = false;
+#       } // outer if
+#       else
+#     	  /* This is always set to false to ensure that the first time the ball
+#     	   *  intersects the paddle, it hasn't changed direction and is does 
+#     	   *  only once after the first point of intersection. */
+#     	  hasChangedDirection = false;
+
+#       // updates each of the ball co-ordinates after the ball has been moved.
+#       topRightPoint.set((topRightPoint.getX() + dx),
+#                         (topRightPoint.getY() + dy));
+#       topLeftPoint.set((topLeftPoint.getX() + dx),
+#                        (topLeftPoint.getY() + dy));
+#       bottomLeftPoint.set((bottomLeftPoint.getX() + dx),
+#                           (bottomLeftPoint.getY() + dy));
+#       centrePoint.set((centrePoint.getX() + dx),
+#                       (centrePoint.getY() + dy));
+#       bottomRightPoint.set((bottomRightPoint.getX() + dx),
+#     		               (bottomRightPoint.getY() + dy));
+
+#       // updates the ball image after it;s been moved
+#       ballImage.setFrame(topLeftPoint.getX(),
+#     		             topLeftPoint.getY(),
+#     		             diameter, 
+#     		             diameter);
+      
+#    } // move

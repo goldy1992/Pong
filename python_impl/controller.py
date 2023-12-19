@@ -1,12 +1,24 @@
 import pygame
+from pygame import mixer
 from pygame.mouse import get_pressed
 
 from classes.model import Model
 from classes.view import View
 
+
 # pygame setup
 pygame.init()
 clock = pygame.time.Clock()
+
+# Starting the mixer 
+mixer.init() 
+  
+# Loading the song 
+mixer.music.load("assets/game_start.mp3") 
+  
+# Setting the volume 
+mixer.music.set_volume(0.7) 
+  
 
 isRunning: bool = True
 
@@ -36,6 +48,8 @@ def update():
       if event.key == pygame.K_UP:
         model.player1.moving_up = True
     if event.type == pygame.KEYUP:
+      if event.key == pygame.K_RETURN: 
+        mixer.music.play() 
       if event.key == pygame.K_DOWN:
         model.player1.moving_down = False
       if event.key == pygame.K_UP:

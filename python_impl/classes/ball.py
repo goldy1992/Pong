@@ -4,9 +4,9 @@ DEFAULT_POSITION: Position = (400, 300)
 
 class Ball:
   color: Color = (255, 255, 255)
-  radius: float
-  dx: float
-  dy: float
+  radius: float = 0
+  dx: float = 0
+  dy: float = 0
   position: Position = (400, 300)
 
   def __init__(self, radius: float, position: Position = DEFAULT_POSITION):
@@ -81,14 +81,16 @@ class Ball:
 #    } // ball constructor
    
 
-#    /**
-#     * Moves the ball to the initial position
-#     */
-#     public final void moveToInitialPosition()
-#     {
-# 	  // set the ball stationary
-#       dx = 0;
-#       dy = 0;
+  def move_to_initial_position(self): 
+    """    
+      Moves the ball to the initial position
+    """
+    # set the ball stationary
+    self.dx = 0
+    self.dy = 0
+    self.position = DEFAULT_POSITION
+
+
 
 #       /* sets the point references of the ball to the relevant points using the
 #        *  centre point as a guide */
@@ -114,30 +116,17 @@ class Ball:
 #    } // moveInitialPosition
    
    
-#    /**
-#     * Used for debugging purposes outputs the the co-ordinates of each 
-#     * position 
-#     */
-#    @Override
-#    public String toString()
-#    {
-# 	   return "Top Left: " + topLeftPoint.getX() + ", " 
-#                 + topLeftPoint.getY() + "\n" +
-			   
-#     		   "Top Right: " + topRightPoint.getX() + ", " 
-#     		   + topRightPoint.getY() + "\n" +
-    		   
-#     		   "Bottom Left: " + bottomLeftPoint.getX() + ", " 
-#     		   + bottomLeftPoint.getY() + "\n" +
-    		   
-#     		   "Bottom Right: " + bottomRightPoint.getX() + ", " 
-#     		   + bottomRightPoint.getY() + "\n" +
-    		   
-#     		   "Centre Point: " + centrePoint.getX() + ", " 
-#     		   + centrePoint.getY();
+  def __str__(self):
+    """
+      Used for debugging purposes outputs the the co-ordinates of each position. 
+    """
+    return f'Ball({self} with center: {self.position}, radius: {self.radius}, color: {self.color})'
 
-#    } // toString
+  def move(self, new_pos: Position):
+    self.position = new_pos
 
+  def is_out_of_bounds(self):
+    return False
 #    /**
 #     * This method is called when the model updates and has to move the ball. 
 #     * The logic to the reaction of the ball, if it intersects with other 
