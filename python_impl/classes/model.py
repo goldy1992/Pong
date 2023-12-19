@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 from classes.ball import Ball
-from classes.util import random_direction
+from classes.util import WORLD_RECT, random_direction
 from constants import WINDOW_HEIGHT, WINDOW_WIDTH, Position
 from paddle import PADDLE_WIDTH, Paddle
 
@@ -52,6 +52,15 @@ class Model():
 
 
         # ball = new Ball();
+
+  def __check_for_intersection(self):
+    ball = self.ball
+    p1 = self.player1
+    p2 = self.player2
+
+
+    if pygame.Rect.colliderect(ball.rect, p1.rect) or pygame.Rect.colliderect(ball.rect, p2.rect):
+      ball.dx = - ball.dx
 
 
   def checkForIntersection(self) -> BallState:
@@ -185,18 +194,18 @@ class Model():
       p1.y_pos += 100 * (deltaTimeMs / 500)
 
   def __move_ball(self, deltaTimeMs: float):
+    self.__check_for_intersection()
     changeNo: BallState = self.checkForIntersection()
 
     if changeNo != BallState.BALL_DIDNT_TOUCH_PADDLE:
       self.ball.isTouchingPaddle = True
-
-    if self.ball.is_out_of_bounds():
       self.ball.moveToInitialPosition()
       self.waitingToServe = True
 
     if not self.waitingToServe:
-      new_pos = self.__calculate_new_ball_position(changeNo)
-      self.ball.move(new_pos=new_pos)
+      if not self.__check_out_of_bounds():
+        new_pos = self.__calculate_new_ball_position(changeNo)
+        self.ball.move(new_pos=new_pos)
 
 
   def __is_ball_touching_player(self):
@@ -222,17 +231,26 @@ class Model():
     b_mask = pygame.mask.from_surface(b_surface)
     return b_mask.overlap(p1_mask) or b_mask.overlap(p2_mask)
 
+  
+  def __check_out_of_bounds(self) -> bool:
+    ball = self.ball
+    if not pygame.Rect.colliderect(ball.rect, WORLD_RECT):
+      print(f'ball is out of bounds {ball.rect}')
+      self.waitingToServe = True
+      self.ball.move_to_initial_position()
+      return True
+    
+    return False
+  
+
   def __calculate_new_ball_position(self, state: BallState) -> Position:
          # if statement added here because if dx and dy are originally set when 
          # the game is paused the AI knows where the ball will go before the game 
          # commences and will therefore move to that position
     ball = self.ball
     if (ball.dx == 0) or (ball.dy == 0):
-      dx = random_direction()
-      dy = random_direction()
-      print(f"dx:  + {dx} + dy: {dy}")
-      ball.dx = dx
-      ball.dy = dy
+      ball.dx = random_direction()
+      ball.dy = random_direction()
 	  
     # if the ball touches the the top wall then change y direction.
     ball_top = ball.position[1] - ball.radius
@@ -240,11 +258,13 @@ class Model():
     if (ball_top < 0) or (ball_bottom > WINDOW_HEIGHT):
       ball.dy = -ball.dy
 
+    
+
     # if __is_ball_touching_player():
     #   return False
    
    
-    return (ball.position[0], ball.position[1])
+    return (ball.position[0] + ball.dx, ball.position[1] + ball.dy)
 
 
 #       if (isTouchingPaddle)

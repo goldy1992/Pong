@@ -1,7 +1,12 @@
-import random 
+import random
+
+import pygame
+
+from constants import WINDOW_HEIGHT, WINDOW_WIDTH 
 
 GAUSSIAN_MEAN = 0
 GAUSSIAN_STD = 1
+WORLD_RECT = pygame.Rect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 
 def __next_gaussian() -> float:
@@ -17,4 +22,8 @@ def random_direction() -> float:
   """
   magnitude = __next_gaussian() * 0.5      
   return (magnitude - 3.0) if (magnitude < 0) else (magnitude + 3.0)
+
+
+def create_collision_surface():
+   return pygame.Surface((WINDOW_WIDTH,WINDOW_HEIGHT))
  

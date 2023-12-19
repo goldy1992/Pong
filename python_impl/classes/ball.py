@@ -1,4 +1,6 @@
-from constants import Color, Position
+import pygame
+from classes.util import create_collision_surface
+from constants import WINDOW_HEIGHT, WINDOW_WIDTH, Color, Position
 
 DEFAULT_POSITION: Position = (400, 300)
 
@@ -8,78 +10,18 @@ class Ball:
   dx: float = 0
   dy: float = 0
   position: Position = (400, 300)
+  rect: pygame.Rect 
 
   def __init__(self, radius: float, position: Position = DEFAULT_POSITION):
     self.radius = radius
     self.position = position
+    self.rect = pygame.draw.circle(pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT)), "white", position, radius)
+
+
+  def __set_rect(self):
+    print(f'ball: {self.rect}')
+    self.rect = pygame.draw.circle(create_collision_surface(), "white", self.position, self.radius)
   
-
-   # // defines the ball's radius and diameter
-   # public static final float diameter = 20f;
-   # public static final float radius = diameter / 2;
-   
-   # // the image of the ball
-   # public Ellipse2D.Float ballImage;
-
-   # // points to represent the vertices of the rectangle encapsulating the ball
-   # public Point<Float, Float> topRightPoint;
-   # public Point<Float, Float> topLeftPoint;
-   # public Point<Float, Float> bottomRightPoint;
-   # public Point<Float, Float> bottomLeftPoint;
-   
-   # // the co-ordinates of the centre of the ball
-   # public Point<Float, Float> centrePoint;
-
-   
-   # // determines whether the ball is intersecting one of the paddles
-   # public boolean isTouchingPaddle = false;
-   
-   # /* boolean to determine whether the ball has changed direction during the 
-   #    period of it's intersection, we don't want it to change direction more 
-   #    than once as it could ultimately be travelling in the same direction 
-   #    after the period of intersection */ 
-   # private boolean hasChangedDirection = false;
-   
-
-   # /**
-   #  * Creates a new ball object and moves it to it's initial position in the game area
-   #  */
-   # public Ball()
-   # {
-# 	  // creates the points to reference the position of the ball
-#       topRightPoint = new Point<>();
-#       topLeftPoint = new Point<>();
-#       bottomRightPoint = new Point<>();
-#       bottomLeftPoint = new Point<>();
-#       centrePoint = new Point<>();
-      
-#       /* sets the centre and top left points in order to draw the initial
-#          image of the ball */
-#       centrePoint.set( 0.0f, 0.0f);
-#       topLeftPoint.set((centrePoint.getX() - radius),
-#               (centrePoint.getY() + radius));
-      
-#       // creates the ball image in the initial position of the game area
-#       ballImage = new Ellipse2D.Float(topLeftPoint.getX(),
-#                                        topLeftPoint.getY(), 
-#                                        diameter, 
-#                                        diameter );
-
-#       /* when this method is called the ball is being placed for the first 
-#          time so the image of the ball hasn't been made yet therefore the 
-#          image is set when the constructor of the ball image is called */
-#       moveToInitialPosition();
-          
-#       /* checks the output from the data file read to see if a colour was set 
-#          the last time that the program was run. If the reference to the colour
-#          is null the default colour of white it set. */ 
-#       if (Controller.initialBallColour != null)
-#     	  ballColour = new Color(Controller.initialBallColour); 
-# 		else
-# 			ballColour = Color.WHITE;
-      
-#    } // ball constructor
-   
 
   def move_to_initial_position(self): 
     """    
@@ -89,31 +31,7 @@ class Ball:
     self.dx = 0
     self.dy = 0
     self.position = DEFAULT_POSITION
-
-
-
-#       /* sets the point references of the ball to the relevant points using the
-#        *  centre point as a guide */
-#      /* centrePoint.set( (float)GameDimensions.X_DISTANCE_TO_FIELD_START 
-#                         + (GameDimensions.FIELD_WIDTH / 2),
-#                         (float)(GameDimensions.FIELD_HEIGHT / 2));*/
-#       centrePoint.set(0.0f, 0.0f);
-#       topRightPoint.set((centrePoint.getX() + radius),
-#                         (centrePoint.getY() + radius));
-#       topLeftPoint.set((centrePoint.getX() - radius),
-#                        (centrePoint.getY() + radius));
-#       bottomRightPoint.set((centrePoint.getX() + radius),
-#                           (centrePoint.getY() - radius));
-#       bottomLeftPoint.set((centrePoint.getX() - radius),
-#                           (centrePoint.getY() - radius));
-      
-#       // sets the image of the ball
-#       ballImage.setFrame(topLeftPoint.getX(),
-#         		            topLeftPoint.getY(), 
-#         		            diameter, 
-#         		            diameter);
-
-#    } // moveInitialPosition
+    self.__set_rect()
    
    
   def __str__(self):
@@ -122,11 +40,11 @@ class Ball:
     """
     return f'Ball({self} with center: {self.position}, radius: {self.radius}, color: {self.color})'
 
+
   def move(self, new_pos: Position):
     self.position = new_pos
+    self.__set_rect()
 
-  def is_out_of_bounds(self):
-    return False
 #    /**
 #     * This method is called when the model updates and has to move the ball. 
 #     * The logic to the reaction of the ball, if it intersects with other 

@@ -1,4 +1,5 @@
 
+import pygame
 from constants import WINDOW_HEIGHT, Color
 
 
@@ -14,6 +15,7 @@ class Paddle:
     moving_up = False
     moving_down = False
     color: Color = (255, 255, 255)
+    rect = pygame.Rect(x_pos, y_pos, width, height)
 
     def __init__(self, x_pos: int) -> None:
         self.x_pos = x_pos
