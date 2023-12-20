@@ -92,7 +92,7 @@ class Model():
   def __move_ball(self, deltaTimeMs: float):
     hit_player = self.__check_for_player_hit()
     # TODO: finish editing
-    if not hit_player:
+    if hit_player:
       self.ball.isTouchingPaddle = True
       self.ball.move_to_initial_position()
       self.waitingToServe = True

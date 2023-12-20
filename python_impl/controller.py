@@ -66,20 +66,13 @@ def update():
     if (mouse_pressed[0]):
       print(f"mouse 1 pressed")
       paused = True
-      # current_point = rr.rotate_corner(current_rect.center, current_point, rotate_angle)
-      # current_rect = rr.rotate_rect(current_rect, rotate_angle)
-      #  current_surface = rotated_surface
+
     if (mouse_pressed[1]):
       print(f'middle pressed')
-      #  current_point = rr.rotate_corner(surface_center, (surface_center[0] - (width / 2), surface_center[1]), current_angle * (math.pi / 180))
-      #  print(f'setting current point: {current_point}')
-      # surface_rect = surface_to_rotate.get_rect()
-      # tl = surface_rect.topleft
-      # tr = surface_rect.topright
 
     if (mouse_pressed[2]):
      print(f"right mouse pressed")
-  #    paused = False
+
   t = pygame.time.get_ticks()
   deltaTimeMs = (t - ticksSinceLastFrame)
   ticksSinceLastFrame = t
