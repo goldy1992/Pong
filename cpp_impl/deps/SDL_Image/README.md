@@ -1,0 +1,1 @@
+# ADD SDL_IMAGE dependency here

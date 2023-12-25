@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.26.0)
+project(MY_SDL_PROJECT)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake_config/")
+
+list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/SDL2")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/deps/SDL2")
+list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/SDL_Image")
+
+add_subdirectory(src)
