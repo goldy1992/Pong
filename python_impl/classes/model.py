@@ -3,7 +3,7 @@ from enum import Enum
 import pygame
 from classes.ball import Ball
 from classes.util import WORLD_RECT, random_direction
-from constants import WINDOW_HEIGHT, WINDOW_WIDTH, Position
+from constants import DOWN, UP, WINDOW_HEIGHT, WINDOW_WIDTH, Position
 from paddle import PADDLE_WIDTH, Paddle
 
 class BallState(Enum):
@@ -60,11 +60,9 @@ class Model():
 
     #print(f'ball: {ball.rect}, p1: {p1.rect}, p2: {p2.rect}')
     if pygame.Rect.colliderect(ball.rect, p1.rect):
-      print(f'hit p1')
       ball.dx = - ball.dx
       return True
     elif pygame.Rect.colliderect(ball.rect, p2.rect):
-      print(f'hit p2')
       ball.dx = - ball.dx
       return True
     return False
@@ -85,28 +83,23 @@ class Model():
   def __move_paddles(self, deltaTimeMs: float):
     p1 = self.player1
     if p1.moving_up:
-      p1.move_delta(-100 * (deltaTimeMs / 500))
+     # p1.move_delta(-100, deltaTimeMs)
+      p1.move(UP, deltaTimeMs)
     if self.player1.moving_down:
-      p1.move_delta(100 * (deltaTimeMs / 500))
+    #  p1.move_delta(100, deltaTimeMs)
+      p1.move(DOWN, deltaTimeMs)
+
 
   def __move_ball(self, deltaTimeMs: float):
-    hit_player = self.__check_for_player_hit()
-    # TODO: finish editing
-    if hit_player:
-      self.ball.isTouchingPaddle = True
-      self.ball.move_to_initial_position()
-      self.waitingToServe = True
-
     if not self.waitingToServe:
       if not self.__check_out_of_bounds():
-        print(f'not out of bounds')
-        new_pos = self.__calculate_new_ball_position()
-        self.ball.move(new_pos=new_pos)
+        self.__check_for_player_hit()
+        self.__calculate_new_ball_velocity()
+        self.ball.move(deltaTimeMs)
 
   def __check_out_of_bounds(self) -> bool:
     ball = self.ball
     if not pygame.Rect.colliderect(ball.rect, WORLD_RECT):
-      print(f'ball is out of bounds {ball.rect}')
       self.waitingToServe = True
       self.ball.move_to_initial_position()
       return True
@@ -114,7 +107,7 @@ class Model():
     return False
   
 
-  def __calculate_new_ball_position(self) -> Position:
+  def __calculate_new_ball_velocity(self) -> Position:
          # if statement added here because if dx and dy are originally set when 
          # the game is paused the AI knows where the ball will go before the game 
          # commences and will therefore move to that position
@@ -128,12 +121,6 @@ class Model():
     ball_bottom = ball.position[1] + ball.radius
     if (ball_top < 0) or (ball_bottom > WINDOW_HEIGHT):
       ball.dy = -ball.dy
-
-    
-
-    # if __is_ball_touching_player():
-    #   return False
-   
    
     return (ball.position[0] + ball.dx, ball.position[1] + ball.dy)
 
@@ -153,32 +140,3 @@ class Model():
 #                 case 2: dx = -1.05f * dx;
 #                 default : break;
 #              } // switch
-#     		 hasChangedDirection = true;
-#          } // inner if
-#          isTouchingPaddle = false;
-#       } // outer if
-#       else
-#     	  /* This is always set to false to ensure that the first time the ball
-#     	   *  intersects the paddle, it hasn't changed direction and is does 
-#     	   *  only once after the first point of intersection. */
-#     	  hasChangedDirection = false;
-
-#       // updates each of the ball co-ordinates after the ball has been moved.
-#       topRightPoint.set((topRightPoint.getX() + dx),
-#                         (topRightPoint.getY() + dy));
-#       topLeftPoint.set((topLeftPoint.getX() + dx),
-#                        (topLeftPoint.getY() + dy));
-#       bottomLeftPoint.set((bottomLeftPoint.getX() + dx),
-#                           (bottomLeftPoint.getY() + dy));
-#       centrePoint.set((centrePoint.getX() + dx),
-#                       (centrePoint.getY() + dy));
-#       bottomRightPoint.set((bottomRightPoint.getX() + dx),
-#     		               (bottomRightPoint.getY() + dy));
-
-#       // updates the ball image after it;s been moved
-#       ballImage.setFrame(topLeftPoint.getX(),
-#     		             topLeftPoint.getY(),
-#     		             diameter, 
-#     		             diameter);
-      
-#    } // move

@@ -20,8 +20,9 @@ def random_direction() -> float:
     @return returns 2 or -2 representing the magnitude and direction of the
     ball chosen at random
   """
-  magnitude = __next_gaussian() * 0.5      
-  return (magnitude - 3.0) if (magnitude < 0) else (magnitude + 3.0)
+  magnitude = random.uniform(0.2, 0.6)
+  print(f'setting magnitude to be {magnitude}')      
+  return magnitude
 
 
 def create_collision_surface():

@@ -9,3 +9,8 @@ RGB = Tuple[int, int, int]
 RGBA = Tuple[int, int, int, int]
 Position = Tuple[float, float]
 Color = Union[RGB, RGBA]
+
+# Directions
+UP = 'up'
+DOWN = 'down'
+Direction = set([UP, DOWN])

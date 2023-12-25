@@ -44,6 +44,11 @@ class Ball:
     self.position = new_pos
     self.__set_rect()
 
+  def move(self, deltaTimeMs: float):
+    self.position = (self.position[0] + (self.dx * deltaTimeMs),
+                     self.position[1] + (self.dy * deltaTimeMs))
+    self.__set_rect()
+
 #     	 if(!hasChangedDirection)
 #          {
 #     		 // uses changeNo to decide how to react to the intersections
