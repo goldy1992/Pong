@@ -19,7 +19,6 @@ class Paddle {
         bool movingUp = false;
         bool movingDown = false;
         Color* color;
-        SDL_Rect* bounds;
     public:
         Paddle() {
             Position defaultPosition = {0, 0};
@@ -54,9 +53,6 @@ class Paddle {
         }
         Position* getPosition() {
             return position;
-        }
-        SDL_Rect* getBounds() {
-            return bounds;
         }
         void setMovingUp(bool isMovingUp) {
             movingUp = isMovingUp;
