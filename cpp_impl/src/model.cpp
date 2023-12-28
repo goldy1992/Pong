@@ -5,11 +5,13 @@
 void Model::movePaddles(int deltaTimeMs) {
     // v = s/ t  s = vt    50 = 1000v v = 50 / 1000
   if (this -> player1 -> isMovingUp()) {
-    double v = -1.05;
-    double s = v * deltaTimeMs;
-
+    double s = -PADDLE_SPEED * deltaTimeMs;
     Position* currentPos = player1 -> getPosition();
-    currentPos -> y += s;
+    double newYPosition = (currentPos -> y) + s;
+    if (newYPosition < 0) {
+      newYPosition = 0;
+    }
+    currentPos -> y = newYPosition;
 
     // std::cout << "p1 moving up with deltaT:" 
     //   + std::to_string(deltaTimeMs)  
@@ -19,11 +21,16 @@ void Model::movePaddles(int deltaTimeMs) {
     }
 
     if (this->player1 ->isMovingDown()) {
-      double v = 1.05;
-      double s = v * deltaTimeMs;
-      // p1.move_delta(-100, deltaTimeMs)
+      double s = PADDLE_SPEED * deltaTimeMs;
       Position* currentPos = player1 -> getPosition();
-      currentPos -> y += s;
+      double newYPosition = (currentPos -> y) + s;
+      // check if out of bounds
+      double maxHeight = WINDOW_HEIGHT - (this -> player1 -> getHeight());
+      if (newYPosition > maxHeight) {
+        newYPosition = maxHeight;
+      }
+      currentPos -> y = newYPosition;
+  
     }
   }
 

@@ -7,6 +7,7 @@
 const int PADDLE_WIDTH = 60;
 const int PADDLE_HEIGHT = 180;
 const int PADDLE_START_Y_POS = (WINDOW_HEIGHT - PADDLE_HEIGHT) / 2;
+const double PADDLE_SPEED = 1.2; 
 
 const Color DEFAULT_COLOR = {0, 0,0,255};
 
