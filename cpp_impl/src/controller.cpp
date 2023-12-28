@@ -5,7 +5,7 @@
 #include <iostream>
 #include <SDL.h>
 
-int defaultYPos = calculateDefaultYPosition(PADDLE_HEIGHT);
+double defaultYPos = calculateDefaultYPosition(PADDLE_HEIGHT);
 
 Position player1Position = {20, defaultYPos};
 Color player1Color = {150,76,204,255};
@@ -13,7 +13,11 @@ Paddle player1(&player1Position, &player1Color);
 Position player2Position = {WINDOW_WIDTH - PADDLE_WIDTH -20, defaultYPos};
 Color player2Color = {150,76,204,255};
 Paddle player2(&player2Position, &player2Color);
-Ball ball;
+Position ballPosition = {
+    WINDOW_WIDTH  / 2.0,
+    WINDOW_HEIGHT / 2.0
+};
+Ball ball(10, &ballPosition);
 
 Model model (&player1, &player2, &ball);
 View view(&model);
@@ -42,7 +46,14 @@ void update() {
             switch( e.key.keysym.sym ) {
 
 				case SDLK_SPACE:
-					std::cout << "jump" << std::endl;
+					std::cout << "space pressed" << std::endl;
+					if (!model.isPaused()) {
+						std::cout << "Game is NOT paused" << std::endl;
+						if (model.isWaitingToServe()) {
+							std::cout << "Setting waitingToServe to false" << std::endl;
+							model.setWaitingToServe(false);
+						}
+					}
 					break;
 				case SDLK_w:
 					model.getPlayer1() -> setMovingUp(true);

@@ -83,6 +83,20 @@ void View::close()
 	SDL_Quit();
 }
 
+void View::renderBall(Ball* ball) {
+	Position* position = ball -> getPosition();
+	Color* color = ball -> getColor();
+	int radius = ball -> getRadius();
+		// std::cout << "drawing circle at position: (" 
+	// 	+ std::to_string(ball -> getPosition() -> x) + ","
+	// 	+ std::to_string(ball -> getPosition() -> y) + ")"
+	// 	<< std::endl;
+	DrawCircle(gRenderer, position, radius, color);
+
+}
+
+
+
 void View::renderPlayer(Paddle* player) {
 	Position* position = player -> getPosition();
 	Color* color = player -> getColor();
@@ -103,6 +117,7 @@ void View::update() {
 	SDL_RenderClear( gRenderer );
 	// draw players HERE
 
+	renderBall(model -> getBall());
 	renderPlayer(model -> getPlayer1());
 	renderPlayer(model -> getPlayer2());
 //    // Set render color to blue ( rect will be rendered in this color )

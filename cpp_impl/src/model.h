@@ -32,13 +32,27 @@ class Model {
         Ball* getBall() {
             return ball;
         }
-
+        void setPaused(bool isPaused) {
+            this -> paused = isPaused;
+        }
+        bool isPaused() {
+            return paused;
+        }
+        void setWaitingToServe(bool isWaitingToServe) {
+            waitingToServe = isWaitingToServe;
+        }
+        bool isWaitingToServe() {
+            return waitingToServe;
+        }
+        bool isSetNewGame() {
+            return setNewGame;
+        }
 
     private:
         Paddle* player1;
         Paddle* player2;
         Ball* ball;
-        bool isPaused = false;
+        bool paused = false;
         bool waitingToServe = true;
         bool setNewGame = false;
         void movePaddles(int deltaTimeMs);

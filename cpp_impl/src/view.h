@@ -11,6 +11,7 @@ class View {
         // Starts up SDL and creates window
         bool loadMedia();
         void close();
+        void renderBall(Ball* ball);
         void renderPlayer(Paddle* paddle);
     public:
         bool init();
