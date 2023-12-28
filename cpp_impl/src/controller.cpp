@@ -10,7 +10,7 @@ int defaultYPos = calculateDefaultYPosition(PADDLE_HEIGHT);
 Position player1Position = {20, defaultYPos};
 Color player1Color = {150,76,204,255};
 Paddle player1(&player1Position, &player1Color);
-Position player2Position = {20, defaultYPos};
+Position player2Position = {WINDOW_WIDTH - PADDLE_WIDTH -20, defaultYPos};
 Color player2Color = {150,76,204,255};
 Paddle player2(&player2Position, &player2Color);
 Ball ball;
@@ -44,22 +44,34 @@ void update() {
 				case SDLK_SPACE:
 					std::cout << "jump" << std::endl;
 					break;
-				case SDLK_UP:
+				case SDLK_w:
 					model.getPlayer1() -> setMovingUp(true);
 					break;
-				case SDLK_DOWN:
+				case SDLK_s:
 					model.getPlayer1() -> setMovingDown(true);
+					break;
+				case SDLK_UP:
+					model.getPlayer2() -> setMovingUp(true);
+					break;
+				case SDLK_DOWN:
+					model.getPlayer2() -> setMovingDown(true);
 					break;
 				default:
 					break;
 			}
 		} else if (e.type == SDL_KEYUP ) {
 			switch( e.key.keysym.sym ) {
+				case SDLK_w:
+					model.getPlayer1() -> setMovingUp(false);
+					break;
+				case SDLK_s:
+					model.getPlayer1() -> setMovingDown(false);
+					break;
 				case SDLK_UP:
-					model.getPlayer1() ->setMovingUp(false);
+					model.getPlayer2() ->setMovingUp(false);
 					break;
 				case SDLK_DOWN:
-					model.getPlayer1()-> setMovingDown(false);
+					model.getPlayer2()-> setMovingDown(false);
 					break;
 				default:
 					break;

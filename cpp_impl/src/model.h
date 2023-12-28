@@ -42,6 +42,7 @@ class Model {
         bool waitingToServe = true;
         bool setNewGame = false;
         void movePaddles(int deltaTimeMs);
+        void movePaddle(Paddle* paddle, int deltaTimeMs);
         void moveBall(int deltaTimeMs);
         bool checkOutOfBounds();
 };

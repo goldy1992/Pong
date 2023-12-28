@@ -83,25 +83,41 @@ void View::close()
 	SDL_Quit();
 }
 
+void View::renderPlayer(Paddle* player) {
+	Position* position = player -> getPosition();
+	Color* color = player -> getColor();
+	SDL_SetRenderDrawColor( gRenderer, color->r, color->g, color->b, color->a );
+	int x = (int)(position -> x),
+		y = (int)(position -> y),
+		w = (int)(player -> getWidth()),
+		h = (int)(player -> getHeight());
+	SDL_Rect bounds =  SDL_Rect { x, y, w, h};
+	//std::cout << "model p1 pos from view BEFORE render: " + std::to_string(p1Position -> y) << std::endl;
+    int result = SDL_RenderFillRect( gRenderer, &bounds);
+
+}
+
 void View::update() {
 	// Clear screen
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( gRenderer );
 	// draw players HERE
 
-   // Set render color to blue ( rect will be rendered in this color )
-   	Paddle* p1 = model -> getPlayer1();
-	Position* p1Position = p1 -> getPosition();
-	Color* p1Color = p1 -> getColor();
-	SDL_SetRenderDrawColor( gRenderer, p1Color->r, p1Color->g, p1Color->b, p1Color->a );
-	SDL_Rect bounds =  SDL_Rect { (int)(p1Position -> x), (int)(p1Position ->y), p1 -> getWidth(), p1 -> getHeight()};
-	//std::cout << "model p1 pos from view BEFORE render: " + std::to_string(p1Position -> y) << std::endl;
-    int result = SDL_RenderFillRect( gRenderer, &bounds);
-	//std::cout << "model p1 pos from view AFTER render: " + std::to_string(p1Position -> y)
-	//+ " result: " + std::to_string(result) << std::endl;
+	renderPlayer(model -> getPlayer1());
+	renderPlayer(model -> getPlayer2());
+//    // Set render color to blue ( rect will be rendered in this color )
+//    	Paddle* p1 = model -> getPlayer1();
+// 	Position* p1Position = p1 -> getPosition();
+// 	Color* p1Color = p1 -> getColor();
+// 	SDL_SetRenderDrawColor( gRenderer, p1Color->r, p1Color->g, p1Color->b, p1Color->a );
+// 	SDL_Rect bounds =  SDL_Rect { (int)(p1Position -> x), (int)(p1Position ->y), p1 -> getWidth(), p1 -> getHeight()};
+// 	//std::cout << "model p1 pos from view BEFORE render: " + std::to_string(p1Position -> y) << std::endl;
+//     int result = SDL_RenderFillRect( gRenderer, &bounds);
+// 	//std::cout << "model p1 pos from view AFTER render: " + std::to_string(p1Position -> y)
+// 	//+ " result: " + std::to_string(result) << std::endl;
 
-   	Paddle* p2 = model -> getPlayer2();
-	Color* p2Color = p2 -> getColor();
+//    	Paddle* p2 = model -> getPlayer2();
+// 	Color* p2Color = p2 -> getColor();
 
   
 	SDL_RenderPresent( gRenderer );

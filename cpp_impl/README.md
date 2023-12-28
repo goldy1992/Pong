@@ -16,3 +16,12 @@ When developing in _*Windows*_, place the SDL2 library within the [deps](./deps/
 
 1. [CMakeLists.txt](CMakeLists.txt) adds the [cmake_config](./cmake_config/) directory to the [CMAKE_MODULE_PATH](https://cmake.org/cmake/help/latest/variable/CMAKE_MODULE_PATH.html).
 2. [cmake_config](./cmake_config/) contains the file [FindSDL2.cmake](./cmake_config/FindSDL2.cmake) which contains the CMake code to find the SDL2 header files and libraries to use during the compilation and linking process.
+
+## Gameplay
+### Controls
+- Player 1:
+   - Up: W
+   - Down: S
+- Player 2:
+   - Up: Arrow Up
+   - Down: Arrow Down
