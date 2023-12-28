@@ -18,6 +18,21 @@ void Model::moveBall(int deltaTimeMs) {
 
     Position* currentPosition = ball -> getPosition();
     int radius = ball -> getRadius();
+
+    // check if hit player
+    bool pastPlayer2X = ((currentPosition -> x) + radius) >= (player2 -> getPosition() -> x);
+    bool withinPlayer2YBounds = ((currentPosition -> y) >= (player2 -> getPosition() -> y))
+      && ((currentPosition -> y) <= ((player2 -> getPosition() -> y) + PADDLE_HEIGHT));
+    bool hitPlayer2 = pastPlayer2X && withinPlayer2YBounds;
+
+    bool pastPlayer1X = ((currentPosition -> x) - radius) <= ((player1 -> getPosition() -> x) + PADDLE_WIDTH);
+    bool withinPlayer1YBounds = ((currentPosition -> y) >= (player1 -> getPosition() -> y))
+      && ((currentPosition -> y) <= ((player1 -> getPosition() -> y) + PADDLE_HEIGHT));
+    bool hitPlayer1 = pastPlayer1X && withinPlayer1YBounds;
+    if (hitPlayer1 || hitPlayer2) {
+      ball -> setDx((ball -> getDx()) * -1);
+    }
+
     // if the ball touches the the top wall then change y direction.
     double ballTop = (currentPosition -> y) - radius;
     double ballBottom = (currentPosition -> y) + radius;
