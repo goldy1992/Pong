@@ -5,7 +5,7 @@
 #include <position.h>
 #include <string>
 
-const Color DEFAULT_BALL_COLOR = {17, 155, 93,255};
+const Color DEFAULT_BALL_COLOR = {47, 122, 250,255};
 const int DEFAULT_BALL_RADIUS = 10;
 const Position DEFAULT_BALL_POSITION = {
     WINDOW_WIDTH  / 2.0,
@@ -27,11 +27,10 @@ class Ball {
             Color ballColor = DEFAULT_BALL_COLOR;
             this -> color = &ballColor;
         }
-        Ball(int radius, Position* position) {
+        Ball(int radius, Position* position, Color* color) {
             this -> radius = radius;
             this -> position = position;
-            Color ballColor = DEFAULT_BALL_COLOR;
-            this -> color = &ballColor;
+            this -> color = color;
         }
 
         ~Ball() {

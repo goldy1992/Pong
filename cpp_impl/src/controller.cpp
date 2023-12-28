@@ -17,7 +17,8 @@ Position ballPosition = {
     WINDOW_WIDTH  / 2.0,
     WINDOW_HEIGHT / 2.0
 };
-Ball ball(10, &ballPosition);
+Color ballColor =  {47, 122, 250,255};
+Ball ball(10, &ballPosition, &ballColor);
 
 Model model (&player1, &player2, &ball);
 View view(&model);
