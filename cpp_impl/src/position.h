@@ -1,5 +1,5 @@
-#pragma once;
+#pragma once
 
 struct Position {
-    int x,y;
+    double x,y;
 };

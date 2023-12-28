@@ -1,4 +1,5 @@
 #pragma once
+#include <model.h>
 #include <SDL.h>
 
 class View {
@@ -12,7 +13,8 @@ class View {
         void close();
     public:
         bool init();
-    View(Model* model) {
-        this->model = model;
-    }
+        void update();
+        View(Model* model) {
+            this->model = model;
+        }
 };

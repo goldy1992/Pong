@@ -1,7 +1,8 @@
-
 #include <SDL.h>
 #include <stdio.h>
 #include <view.h>
+#include <string>
+#include <iostream>
 
 bool View::init()
 {
@@ -23,7 +24,7 @@ bool View::init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
 		if( gWindow == NULL )
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -82,3 +83,27 @@ void View::close()
 	SDL_Quit();
 }
 
+void View::update() {
+	// Clear screen
+	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear( gRenderer );
+	// draw players HERE
+
+   // Set render color to blue ( rect will be rendered in this color )
+   	Paddle* p1 = model -> getPlayer1();
+	Position* p1Position = p1 -> getPosition();
+	Color* p1Color = p1 -> getColor();
+	SDL_SetRenderDrawColor( gRenderer, p1Color->r, p1Color->g, p1Color->b, p1Color->a );
+	SDL_Rect bounds =  SDL_Rect { (int)(p1Position -> x), (int)(p1Position ->y), p1 -> getWidth(), p1 -> getHeight()};
+	//std::cout << "model p1 pos from view BEFORE render: " + std::to_string(p1Position -> y) << std::endl;
+    int result = SDL_RenderFillRect( gRenderer, &bounds);
+	//std::cout << "model p1 pos from view AFTER render: " + std::to_string(p1Position -> y)
+	//+ " result: " + std::to_string(result) << std::endl;
+
+   	Paddle* p2 = model -> getPlayer2();
+	Color* p2Color = p2 -> getColor();
+
+  
+	SDL_RenderPresent( gRenderer );
+
+}

@@ -10,7 +10,12 @@ class Ball {
         float dy;
         Position position;
 
+      
+
     public:
+        Ball() {
+            
+        }
         Ball(int radius) {
             this -> radius = radius;
         }

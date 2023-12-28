@@ -63,6 +63,25 @@ class View:
       )
     )
 
+    # create a font object.
+    # 1st parameter is the font file
+    # which is present in pygame.
+    # 2nd parameter is size of the font
+    font = pygame.font.Font('freesansbold.ttf', 32)
+    
+    # create a text surface object,
+    # on which text is drawn on it.
+    text = font.render('Score', True, "green", transparent)
+    
+    # create a rectangular object for the
+    # text surface object
+    textRect = text.get_rect()
+    
+    # set the center of the rectangular object.
+    textRect.center = (400, 400)
+
+    screen.blit(text, textRect)
+
     pygame.display.flip()
 
 
