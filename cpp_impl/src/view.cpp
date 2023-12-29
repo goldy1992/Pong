@@ -1,8 +1,22 @@
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <stdio.h>
 #include <view.h>
 #include <string>
 #include <iostream>
+
+
+//The music that will be played
+Mix_Music* gMusic = NULL;
+
+//The sound effects that will be used
+Mix_Chunk* gScratch = NULL;
+Mix_Chunk* gHigh = NULL;
+Mix_Chunk* gMedium = NULL;
+Mix_Chunk* gLow = NULL;
+
+Mix_Music* hitSounds[3];
+
 
 bool View::init()
 {
@@ -10,7 +24,7 @@ bool View::init()
 	bool success = true;
 
 	//Initialize SDL
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 )
 	{
 		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
 		success = false;
@@ -22,6 +36,28 @@ bool View::init()
 		{
 			printf( "Warning: Linear texture filtering not enabled!" );
 		}
+
+
+	   //Initialize SDL_mixer
+		if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+		{
+			printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+			success = false;
+		}
+
+		for (int i = 0; i < 3; i++) {
+			hitSounds[i] = NULL;
+			std::string fileName = "sound/footstep_wood_00" + std::to_string(i) + ".ogg";
+			char *fileNameChar = new char[fileName.length() + 1];
+			strcpy(fileNameChar, fileName.c_str()); 
+			hitSounds[i] = Mix_LoadMUS(fileNameChar); 
+			if(hitSounds[i] == NULL) 
+			{ 
+				printf("Unable to load Ogg file: %s\n", Mix_GetError()); 
+				success = false; 
+			}
+		}
+
 
 		//Create window
 		gWindow = SDL_CreateWindow( "Pong MVC", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
@@ -73,6 +109,11 @@ bool View::loadMedia()
 
 void View::close()
 {
+	for (int i = 1; i < 3; i++) {
+		Mix_FreeMusic(hitSounds[i]);
+		hitSounds[i] = NULL;
+	}
+
 	//Deallocate surfaces
 
 	//Destroy window
@@ -80,6 +121,7 @@ void View::close()
 	gWindow = NULL;
 
 	//Quit SDL subsystems
+	Mix_Quit();
 	SDL_Quit();
 }
 
@@ -93,9 +135,15 @@ void View::renderBall(Ball* ball) {
 	// 	<< std::endl;
 	DrawCircle(gRenderer, position, radius, color);
 
+	if (ball -> isHitPlayer()) {
+		int randomIndex = randomIntInRange(0, 2);
+		int s = Mix_PlayMusic(hitSounds[randomIndex], 0);
+		std::cout << "playinng sound: " + std::to_string(randomIndex) + " success:" + std::to_string(s) << std::endl;
+		// play sound
+		ball -> setHitPlayer(false);
+	}
+
 }
-
-
 
 void View::renderPlayer(Paddle* player) {
 	Position* position = player -> getPosition();

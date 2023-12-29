@@ -25,6 +25,13 @@ float randomDirection() {
     return randomSpeed * multiplier;
 }
 
+
+int randomIntInRange(int start, int end) {
+    std::uniform_int_distribution<> intDistr(start, end);
+    return intDistr(gen);
+
+}
+
 void DrawCircle(SDL_Renderer * renderer, Position* position, int radius, Color* color)
 {
     int centreX = (int) position -> x;

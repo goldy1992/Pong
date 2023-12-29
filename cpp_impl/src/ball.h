@@ -17,6 +17,9 @@ class Ball {
         int radius;
         float dx;
         float dy;
+        bool canChangeDx;
+        bool canChangeDy;
+        bool playHitPlayerSound = false;
         Position* position;
 
     public:
@@ -60,5 +63,27 @@ class Ball {
 
         Position* getPosition() {
             return position;
+        }
+
+        void setCanChangeDx(bool changeDx) {
+            this -> canChangeDx = changeDx;
+        }
+
+        bool isCanChangeDx() {
+            return canChangeDx;
+        }
+        void setCanChangeDy(bool changeDy) {
+            this -> canChangeDy = changeDy;
+        }
+        bool isCanChangeDy() {
+            return canChangeDy;
+        }
+
+        bool isHitPlayer() {
+            return playHitPlayerSound;
+        }
+
+        void setHitPlayer(bool hitPlayer) {
+            playHitPlayerSound = hitPlayer;
         }
 };

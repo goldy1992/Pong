@@ -30,6 +30,7 @@ void Model::moveBall(int deltaTimeMs) {
       && ((currentPosition -> y) <= ((player1 -> getPosition() -> y) + PADDLE_HEIGHT));
     bool hitPlayer1 = pastPlayer1X && withinPlayer1YBounds;
     if (hitPlayer1 || hitPlayer2) {
+      ball -> setHitPlayer(true);
       ball -> setDx((ball -> getDx()) * -1);
     }
 
