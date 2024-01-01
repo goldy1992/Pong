@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjl6fmcb84kp"]
+
+[ext_resource type="Script" path="res://Paddle.gd" id="1_d0o76"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g8cah"]
+
+[node name="Paddle" type="Area2D"]
+position = Vector2(100, 100)
+disable_mode = 2
+script = ExtResource("1_d0o76")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_g8cah")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="draw" from="." to="." method="_on_draw"]

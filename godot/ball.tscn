@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://crw5hd8pn45fn"]
+
+[ext_resource type="Script" path="res://ball.gd" id="1_p0bka"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xtt0e"]
+
+[node name="Ball" type="Area2D"]
+script = ExtResource("1_p0bka")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_xtt0e")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="draw" from="." to="." method="_on_draw"]

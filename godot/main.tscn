@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://duodml4edesx5"]
+
+[ext_resource type="PackedScene" uid="uid://bjl6fmcb84kp" path="res://paddle.tscn" id="1_0wwkx"]
+[ext_resource type="Script" path="res://main.gd" id="1_75yya"]
+[ext_resource type="PackedScene" uid="uid://crw5hd8pn45fn" path="res://ball.tscn" id="2_2yo26"]
+[ext_resource type="PackedScene" uid="uid://c2s8qm415adq2" path="res://wall.tscn" id="4_yjw4k"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_75yya")
+
+[node name="Player1" parent="." instance=ExtResource("1_0wwkx")]
+x = 20.0
+move_up_action = "p1_move_up"
+move_down_action = "p1_move_down"
+
+[node name="Player2" parent="." instance=ExtResource("1_0wwkx")]
+move_up_action = "p2_move_up"
+move_down_action = "p2_move_down"
+
+[node name="Ball" parent="." instance=ExtResource("2_2yo26")]
+radius = 30
+center = Vector2(1152, 300)
+color = Color(0.858824, 0.529412, 0.364706, 1)
+
+[node name="WallTop" parent="." instance=ExtResource("4_yjw4k")]
+
+[node name="WallBottom" parent="." instance=ExtResource("4_yjw4k")]
+position = Vector2(198, 542)
