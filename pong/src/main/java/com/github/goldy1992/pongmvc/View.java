@@ -13,7 +13,7 @@ public class View extends JFrame implements KeyListener, WindowListener
    private static final long serialVersionUID = 1L;
 
    public ScorePanel scorePanel;
-   private GameArea gameArea;
+   private GameArea gameArea = new GameArea();
    private MenuBar menuBar = new MenuBar();
    public GameArea getGameArea()
    {
